@@ -15,15 +15,25 @@ import (
 func GetAllChallenges(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	dirs, err := os.ReadDir("files/Forensics")
+	folder := "files/Forensics/"
+	dirs, err := os.ReadDir(folder)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
 	var ch models.Forensic
 	var challenge models.Challenge
 	for _, f := range dirs {
+		cmds := make(map[string][]string)
 		challenge.Name = f.Name()
-		challenge.Commands = getSolutions(f.Name())
+		cmds["Change Directory to "+f.Name()] = []string{"cd " + folder + f.Name()}
+		chs, err := os.ReadDir(folder + f.Name())
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		for _, c := range chs {
+			cmds[c.Name()] = getSolutions(c.Name())
+		}
+		challenge.Commands = cmds
 		ch.Challenges = append(ch.Challenges, challenge)
 	}
 	json.NewEncoder(w).Encode(ch)
@@ -62,17 +72,26 @@ func getSolutions(filename string) []string {
 	switch ext {
 	case "img":
 		solutions = append(solutions, diskImage(filename)...)
+	case "jpg", "png", "bmp":
+		solutions = append(solutions, image(filename)...)
 	}
 	return solutions
 }
 
 func diskImage(filename string) []string {
-	// var solutions []string
 	solutions := []string{
-		"cd files/Forensics",
+		"sudo mkdir /mnt/img",
 		"sudo mount " + filename + " /mnt/img/",
-		"cd /mnt/img",
-		"ls",
+		"tree /mnt/img",
+	}
+	return solutions
+}
+func image(filename string) []string {
+	solutions := []string{
+		"file " + filename,
+		"strings " + filename,
+		"binwalk -e " + filename,
+		"hexdump -C " + filename,
 	}
 	return solutions
 }

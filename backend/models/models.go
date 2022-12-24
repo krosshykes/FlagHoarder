@@ -6,8 +6,8 @@ type Run struct {
 	Input     string   `json:"Input"`
 }
 type Challenge struct {
-	Name     string   `json:"Name"`
-	Commands []string `json:"Commands"`
+	Name     string              `json:"Name"`
+	Commands map[string][]string `json:"Commands"`
 }
 type Forensic struct {
 	Challenges []Challenge `json:"Challenges"`
