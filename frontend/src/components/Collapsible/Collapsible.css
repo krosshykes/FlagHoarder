@@ -1,0 +1,130 @@
+.accordian {
+    width: 100%;
+}
+
+.accordian .contentBx {
+    position: relative;
+    margin: 10px 20px;
+}
+
+.accordian .contentBx .label {
+    position: relative;
+    font-weight: 600;
+    background: #fff;
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .1), 0 4px 11px 0 rgba(0, 0, 0, .08);
+    border-radius: 4px;
+    color: #1c1c6b;
+    margin-bottom: 5px;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1;
+    /* transition: all 0.3s ease; */
+}
+
+.accordian .contentBx .label::before {
+    /* content: '+'; */
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+}
+
+.accordian .contentBx.active .label::before {
+    content: '-';
+}
+
+.accordian .contentBx .content {
+    background: #fff;
+    height: 0;
+    overflow: hidden;
+    transition: 0.5s;
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .1), 0 4px 11px 0 rgba(0, 0, 0, .08);
+    border-radius: 4px;
+    height: auto;
+    margin: 10px 0px;
+    padding: 10px;
+}
+
+/* .accordian .contentBx .content {
+    background: #fff;
+    height: 0;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.accordian .contentBx.active .content {
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .1), 0 4px 11px 0 rgba(0, 0, 0, .08);
+    border-radius: 4px;
+    height: auto;
+    margin: 10px 0px;
+    padding: 10px;
+} */
+
+.button {
+    width: fit-content;
+    position: relative;
+    margin: 4px 4px;
+    padding: 8px 8px 8px 10px;
+    /* background: #6355fe; */
+    /* background: #fff; */
+    border: none;
+    outline: none;
+    border-radius: 70%;
+    cursor: pointer;
+
+}
+
+.cb {
+    background: #695CFE;
+}
+
+.button:hover {
+    /* background: #007a63;#695CFE */
+    background: #695CFE;
+    color: #fff;
+
+}
+
+.button__text {
+    /* font: bold 20px 'Quicksand', san-serif; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* color: #ffffff; */
+    transition: all 0.2s;
+}
+
+.button--loading .button__text {
+    /* background: #695CFE; */
+    visibility: hidden;
+    opacity: 0;
+}
+
+.button--loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    /* padding: 8px 10px; */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 4px solid transparent;
+    /* background: #695CFE; */
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
