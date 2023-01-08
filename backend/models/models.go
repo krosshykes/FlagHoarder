@@ -4,6 +4,7 @@ type Run struct {
 	Command   string   `json:"Command"`
 	Arguments []string `json:"Arguments"`
 	Input     string   `json:"Input"`
+	Directory string   `json:"Directory"`
 }
 type Challenge struct {
 	Name     string              `json:"Name"`

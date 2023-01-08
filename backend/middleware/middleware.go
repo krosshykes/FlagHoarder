@@ -25,7 +25,7 @@ func GetAllChallenges(w http.ResponseWriter, r *http.Request) {
 	for _, f := range dirs {
 		cmds := make(map[string][]string)
 		challenge.Name = f.Name()
-		cmds["Change Directory to "+f.Name()] = []string{"cd " + folder + f.Name()}
+		cmds["Change Directory"] = []string{folder + f.Name()}
 		chs, err := os.ReadDir(folder + f.Name())
 		if err != nil {
 			log.Fatalln(err.Error())
@@ -41,18 +41,20 @@ func GetAllChallenges(w http.ResponseWriter, r *http.Request) {
 func RunCommand(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	var run models.Run
 	err := json.NewDecoder(r.Body).Decode(&run)
 	if err != nil {
+		log.Println("Error Decoding Request: ", r.Body)
 		http.Error(w, err.Error(), 500)
 		return
 	}
+	var out bytes.Buffer
 	cmd := exec.Command(run.Command, run.Arguments...)
 	cmd.Stdin = strings.NewReader(run.Input)
-	var out bytes.Buffer
 	cmd.Stdout = &out
+	cmd.Dir = run.Directory
 	err = cmd.Run()
 	if err != nil {
 		log.Fatal(err)
@@ -72,7 +74,7 @@ func getSolutions(filename string) []string {
 	switch ext {
 	case "img":
 		solutions = append(solutions, diskImage(filename)...)
-	case "jpg", "png", "bmp":
+	case "jpg", "png", "bmp", "jpeg":
 		solutions = append(solutions, image(filename)...)
 	}
 	return solutions
